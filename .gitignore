@@ -2,3 +2,5 @@
 .vscode
 *.model
 data
+__pycache__
+weights.hdf5
