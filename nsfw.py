@@ -1,9 +1,8 @@
 #%%
 import os
-import tensorflow as tf
 import numpy as np
 import cv2
-from tensorflow.python import keras
+import keras
 import matplotlib.pyplot as plt
 from keras.utils import to_categorical
 import pickle
@@ -70,9 +69,8 @@ def load_cat_dog_data():
 
 
 def load_nsfw_data():
-    PORN_DIR = '/mnt/data/nsfw/nsfw_data_scrapper/data/train/porn'
-    SEXY_DIR = '/mnt/data/nsfw/nsfw_data_scrapper/data/train/sexy'
-    NEUTRAL_DIR = '/mnt/data/nsfw/nsfw_data_scrapper/data/train/neutral'
+    PORN_DIR = '/home/xinbg/Downloads/dataset/dataset/train_set/nsfw'
+    NEUTRAL_DIR = '/home/xinbg/Downloads/dataset/dataset/train_set/sfw'
     if not os.path.isfile('./x.nsfw.train'):
         xs = []
         ys = []
@@ -84,14 +82,6 @@ def load_nsfw_data():
             except Exception as e:
                 print('Image parse failed with: ',
                       os.path.join(PORN_DIR, porns[idx]))
-        sexys = os.listdir(SEXY_DIR)
-        for idx in tqdm(range(len(sexys))):
-            try:
-                xs.append(read_img(os.path.join(SEXY_DIR, sexys[idx])))
-                ys.append(1)
-            except Exception as e:
-                print('Image parse failed with: ',
-                      os.path.join(SEXY_DIR, sexys[idx]))
         neutrals = os.listdir(NEUTRAL_DIR)
         for idx in tqdm(range(len(neutrals))):
             try:
@@ -120,7 +110,7 @@ print('Y train shape: ', Y.shape)
 
 
 def define_model():
-    model = keras.Sequential()
+    model = keras.models.Sequential()
     model.add(keras.layers.Conv2D(128, kernel_size=(3, 3),
                                   activation='relu',
                                   input_shape=X.shape[1:]))
@@ -145,7 +135,7 @@ def train():
     model = define_model()
     model.fit(X, Y,
               shuffle=True,
-              epochs=1,
+              epochs=3,
               validation_split=0.3
               )
     return model
@@ -156,5 +146,9 @@ def load(path: str):
     model.load_weights(path)
     return model
 
-# m = train()
-# m = load()
+
+m = train()
+m.save('./nsfw.model', overwrite=True)
+# m = load('./nsfw.model')
+# print(m.predict(np.array([read_img(
+#     '/home/xinbg/Downloads/dataset/dataset/test_set/nsfw/greek-porn-655253.jpg')])))
