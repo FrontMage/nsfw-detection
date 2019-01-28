@@ -60,12 +60,12 @@ train_datagen = ImageDataGenerator(
 test_datagen = ImageDataGenerator(rescale=1./255)
 
 training_set = train_datagen.flow_from_directory(
-    '/home/xinbg/Downloads/dataset/dataset/train_set',
+    './data/train_set',
     target_size=(IMAGE_HEIGHT, IMAGE_WIDTH),
     batch_size=BATCH_SIZE,
     class_mode='categorical')
 test_set = test_datagen.flow_from_directory(
-    '/home/xinbg/Downloads/dataset/dataset/test_set',
+    './data/test_set',
     target_size=(IMAGE_HEIGHT, IMAGE_WIDTH),
     batch_size=BATCH_SIZE,
     class_mode='categorical')
